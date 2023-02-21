@@ -1,0 +1,82 @@
+---
+import { marked } from "marked";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const { title } = Astro.params;
+const QUERY = encodeURIComponent(
+  `*[_type == "recipe" && title == "${title}"] { ..., "imageUrl": image.asset->url }`
+);
+
+const URL = `https://${
+  import.meta.env.PROJECT_ID
+}.apicdn.sanity.io/v2021-10-21/data/query/${
+  import.meta.env.DATASET
+}?query=${QUERY}`;
+
+const response = await fetch(URL);
+const data = await response.json();
+const recipe = data.result[0];
+---
+
+<html class="h-full" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="h-full">
+    <SiteLayout>
+      <main class="max-w-prose mx-auto">
+        <div class="prose pt-10">
+          <h1>{recipe.title}</h1>
+          {
+            recipe.imageUrl && (
+              <img
+                class="h-[600px] w-full object-cover"
+                src={recipe.imageUrl}
+                alt=""
+              />
+            )
+          }
+          <div class="flex justify-between">
+            <div><b>Prep time:</b> {recipe.prep_time}</div>
+            <div><b>Cook time:</b> {recipe.cook_time}</div>
+            <div><b>Total time:</b> {recipe.cook_time + recipe.prep_time}</div>
+          </div>
+          {
+            recipe.meal_parts.map((part) => {
+              return (
+                <div>
+                  <h4>{part.name}</h4>
+                  <ul>
+                    {part.ingredients.map((ingredient) => {
+                      return (
+                        <li>
+                          {ingredient.quantity} {ingredient.unit}{" "}
+                          {ingredient.name}{" "}
+                          {ingredient.optional && "(optional)"}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })
+          }
+
+          <div>
+            <h4>Instructions</h4>
+            <ul>
+              {
+                recipe.instructions.map((step) => {
+                  return <li set:html={marked.parse(step)} />;
+                })
+              }
+            </ul>
+          </div>
+        </div>
+      </main>
+    </SiteLayout>
+  </body>
+</html>

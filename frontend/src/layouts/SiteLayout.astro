@@ -1,0 +1,15 @@
+<div class="flex flex-col h-full">
+  <header class="bg-red-500">
+    <nav class="mx-auto max-w-prose px-4 md:px-0" aria-label="Top">
+      <div class="flex w-full items-center justify-between py-2">
+        <a as="button" class="text-white py-1 rounded cursor-pointer" href="/"
+          >Home</a
+        >
+      </div>
+    </nav>
+  </header>
+  <div class="flex-grow px-4 md:px-0">
+    <slot />
+  </div>
+  <footer class="w-full h-40 bg-gray-100 mt-10"></footer>
+</div>

@@ -1,18 +1,30 @@
 ---
-const { title, image } = Astro.props;
+const { title, image, id } = Astro.props;
 ---
 
 <div class="flex flex-col overflow-hidden rounded-lg shadow-lg">
-  <div class="flex-shrink-0">
-    <a href={`/recipes/${title}`}>
-      <img class="h-48 w-full object-cover bg-gray-100" src={image} alt="" />
-    </a>
-  </div>
-  <div class="flex flex-1 flex-col justify-between bg-white p-6">
-    <div class="flex-1">
-      <p class="text-xl font-semibold text-gray-900">
-        {title}
-      </p>
+  <a href={`/recipes/${id}`}>
+    <div class="flex-shrink-0">
+      {
+        image ? (
+          <img
+            class="h-48 w-full object-cover bg-gray-100"
+            src={image}
+            alt=""
+          />
+        ) : (
+          <div class="h-48 w-full object-cover bg-gray-100 flex items-center justify-center font-bold text-4xl text-gray-700">
+            ?
+          </div>
+        )
+      }
     </div>
-  </div>
+    <div class="flex flex-1 flex-col justify-between bg-white p-6">
+      <div class="flex-1">
+        <p class="text-xl font-semibold text-gray-900">
+          {title}
+        </p>
+      </div>
+    </div>
+  </a>
 </div>

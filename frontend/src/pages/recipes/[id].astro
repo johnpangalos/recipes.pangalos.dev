@@ -2,9 +2,9 @@
 import { marked } from "marked";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 
-const { title } = Astro.params;
+const { id } = Astro.params;
 const QUERY = encodeURIComponent(
-  `*[_type == "recipe" && title == "${title}"] { ..., "imageUrl": image.asset->url }`
+  `*[_type == "recipe" && _id == "${id}"] { ..., "imageUrl": image.asset->url }`
 );
 
 const URL = `https://${
@@ -29,7 +29,7 @@ const recipe = data.result[0];
     <SiteLayout>
       <main class="max-w-prose mx-auto">
         <div class="prose pt-10">
-          <h1>{recipe.title}</h1>
+          <h1>{recipe?.title}</h1>
           {
             recipe.imageUrl && (
               <img
@@ -54,7 +54,16 @@ const recipe = data.result[0];
                       return (
                         <li>
                           {ingredient.quantity} {ingredient.unit}{" "}
-                          {ingredient.name}{" "}
+                          <span
+                            class:list={[
+                              {
+                                lowercase:
+                                  ingredient.unit && ingredient.quantity,
+                              },
+                            ]}
+                          >
+                            {ingredient.name}
+                          </span>{" "}
                           {ingredient.optional && "(optional)"}
                         </li>
                       );

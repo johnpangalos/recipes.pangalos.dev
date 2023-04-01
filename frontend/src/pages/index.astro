@@ -3,7 +3,7 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import RecipeCard from "../components/RecipeCard.astro";
 
 const QUERY = encodeURIComponent(
-  `*[_type == 'recipe'] { title, "imageUrl": image.asset->url }`
+  `*[_type == 'recipe'] { title, "imageUrl": image.asset->url, _id }`
 );
 const URL = `https://${
   import.meta.env.PROJECT_ID
@@ -44,7 +44,11 @@ const recipes = data.result;
               {
                 recipes.map((recipe) => {
                   return (
-                    <RecipeCard title={recipe.title} image={recipe.imageUrl} />
+                    <RecipeCard
+                      id={recipe._id}
+                      title={recipe.title}
+                      image={recipe.imageUrl}
+                    />
                   );
                 })
               }

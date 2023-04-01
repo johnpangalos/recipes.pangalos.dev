@@ -7,4 +7,10 @@ export default defineConfig({
   output: "server",
   integrations: [tailwind()],
   adapter: cloudflare(),
+  vite: {
+    define: {
+      "process.env.PROJECT_ID": JSON.stringify(process.env.PROJECT_ID),
+      "process.env.DATASET": JSON.stringify(process.env.DATASET),
+    },
+  },
 });
